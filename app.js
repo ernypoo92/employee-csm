@@ -24,11 +24,11 @@ const mainMenu = () => {
     return inquirer.prompt([
         {
             type: 'list',
-            name: 'action',
+            name: 'choice',
             message: 'Please select an action:',
-            choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a New Department', 'Add a New Role', 'Add a New Employee', 'Update Employee Role', 'Quit'],
-            validate: actionInput => {
-                if (actionInput) {
+            choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add a New Department', 'Add a New Role', 'Add a New Employee', 'Update Employee Role', 'Close Application'],
+            validate: choiceInput => {
+                if (choiceInput) {
                     return true;
                 } else {
                     console.log('Please select an action.')
@@ -36,31 +36,39 @@ const mainMenu = () => {
                 }
             }
         }
-    ]).then(action => {
-        console.log(action.action);
-
-        if (action.action === 'View All Departments') {
-            viewDepartments();
-        } else if (action.action === 'View All Roles') {
-            viewRoles();
-        } else if (action.action === 'View All Employees') {
-            viewEmployees();
-        } else if (action.action === 'Add a New Department') {
-            newDepartment();
-        } else if (action.action === 'Add a New Role') {
-            newRole();
-        } else if (action.action === 'Add a New Employee') {
-            newEmployee();
-        } else if (action.action === 'Update Employee Role') {
-            updateRole();
-        } else {
-            console.log('Goodbye! To restart, clear terminal with CNTRL+C and run command "node app.js"')
+    ]).then(choice => {
+        console.log(choice.choice);
+        switch (choice.choice) {
+            case 'View All Departments':
+                viewDepartmentTable();
+                break;
+            case 'View All Roles':
+                viewRolesTable();
+                break;
+            case 'View All Employees':
+                viewEmployeeTable();
+                break;
+            case 'Add a New Department':
+                addNewDepatment();
+                break;
+            case 'Add a New Role':
+                addNewRole();
+                break;
+            case 'Add a New Employee':
+                addNewEmployee();
+                break;
+            case 'Update Employee Role':
+                updateEmployeeRole();
+                break;
+            case 'Close Application':
+                console.log('Closing Application')
+                break;
         }
     });
 };
 
 // to display departments table
-const viewDepartments = () => {
+const viewDepartmentTable = () => {
     db.query('SELECT * FROM departments', (err, res) => {
         if (err) {
             throw err;
@@ -71,7 +79,7 @@ const viewDepartments = () => {
 };
 
 // to display roles table 
-const viewRoles = () => {
+const viewRolesTable = () => {
     db.query('SELECT * FROM roles', (err, res) => {
         if (err) {
             throw err;
@@ -81,8 +89,9 @@ const viewRoles = () => {
     });
 };
 
+
 // to display employees table 
-const viewEmployees = () => {
+const viewEmployeeTable = () => {
     db.query('SELECT * FROM employees', (err, res) => {
         if (err) {
             throw err;
@@ -93,10 +102,10 @@ const viewEmployees = () => {
 };
 
 // adding new department 
-const newDepartment = () => {
+const addNewDepatment = () => {
     console.log(`
     ----------------------------------------
-        Enter a new department
+        Type in the name of your new department
     ----------------------------------------`);
 
     return inquirer.prompt([
@@ -108,7 +117,7 @@ const newDepartment = () => {
                 if (nameInput) {
                     return true;
                 } else {
-                    console.log('No name has been entered, please try again.');
+                    console.log('No name has been entered, please type in the name of your new department.');
                     return false;
                 }
             }
@@ -123,10 +132,10 @@ const newDepartment = () => {
 };
 
 // adding new role 
-const newRole = () => {
+const addNewRole = () => {
     console.log(`
     ----------------------------------------
-            Enter a new role
+            Type in the name of your new role
     ----------------------------------------`);
 
     db.query('SELECT * FROM departments', (err, res) => {
@@ -143,7 +152,7 @@ const newRole = () => {
                     if (job_titleInput) {
                         return true;
                     } else {
-                        console.log("No job title has been entered, please try again.")
+                        console.log("No job title has been entered, please type in the name of your new role.")
                     }
                 }
             },
@@ -155,7 +164,7 @@ const newRole = () => {
                     if (salaryInput) {
                         return true;
                     } else {
-                        console.log("No salary has been entered, please try again.")
+                        console.log("No salary has been entered, please type in the new roles salary.")
                     }
                 }
             },
@@ -164,11 +173,11 @@ const newRole = () => {
                 name: 'department_id',
                 message: "What's the new role's department id?",
                 choices: res.map(departments => departments.name),
-                validate: salaryInput => {
-                    if (salaryInput) {
+                validate: department_id => {
+                    if (department_id) {
                         return true;
                     } else {
-                        console.log("No department id has been entered, please try again.")
+                        console.log("No department id has been entered, please type in the ne roles department id.")
                     }
                 }
             }
@@ -188,10 +197,10 @@ const newRole = () => {
 };
 
 // adding a new employee 
-const newEmployee = () => {
+const addNewEmployee = () => {
     console.log(`
     ----------------------------------------
-            Enter a new employee
+            Type in the name your new employee
     ----------------------------------------`);
 
     db.query('SELECT * FROM roles', (err, res) => {
@@ -208,7 +217,7 @@ const newEmployee = () => {
                     if (first_nameInput) {
                         return true;
                     } else {
-                        console.log("No first name has been entered, please try again.")
+                        console.log("No first name has been Type in the nameed, please try again.")
                     }
                 }
             },
@@ -220,7 +229,7 @@ const newEmployee = () => {
                     if (last_nameInput) {
                         return true;
                     } else {
-                        console.log("No last name has been entered, please try again.")
+                        console.log("No last name has been Type in the nameed, please try again.")
                     }
                 }
             },
@@ -232,7 +241,7 @@ const newEmployee = () => {
                     if (manager_idInput) {
                         return true;
                     } else {
-                        console.log("No manager id has been entered, please try again.")
+                        console.log("No manager id has been Type in the nameed, please try again.")
                     }
                 }
             },
@@ -245,7 +254,7 @@ const newEmployee = () => {
                     if (role_idInput) {
                         return true;
                     } else {
-                        console.log("No role id has been entered, please try again.")
+                        console.log("No role id has been Type in the nameed, please try again.")
                     }
                 }
             }
@@ -265,7 +274,7 @@ const newEmployee = () => {
 };
 
 // to update an employee's role 
-const updateRole = () => {
+const updateEmployeeRole = () => {
 
     db.query('SELECT * FROM employees', (err, res) => {
         if (err) {
@@ -307,7 +316,7 @@ const updateRole = () => {
                             if (role_idInput) {
                                 return true;
                             } else {
-                                console.log('No role id has been entered, please try again.');
+                                console.log('No role id has been Type in the nameed, please try again.');
                                 return false;
                             }
                         }
