@@ -104,9 +104,9 @@ const viewEmployeeTable = () => {
 // adding new department 
 const addNewDepatment = () => {
     console.log(`
-    ----------------------------------------
+    ------------------------------------------------
         Type in the name of your new department
-    ----------------------------------------`);
+    ------------------------------------------------`);
 
     return inquirer.prompt([
         {
@@ -134,9 +134,9 @@ const addNewDepatment = () => {
 // adding new role 
 const addNewRole = () => {
     console.log(`
-    ----------------------------------------
-            Type in the name of your new role
-    ----------------------------------------`);
+    -----------------------------------------
+        Type in the name of your new role
+    -----------------------------------------`);
 
     db.query('SELECT * FROM departments', (err, res) => {
         if (err) {
@@ -177,7 +177,7 @@ const addNewRole = () => {
                     if (department_id) {
                         return true;
                     } else {
-                        console.log("No department id has been entered, please type in the ne roles department id.")
+                        console.log("No department id has been entered, please type in the new roles department id.")
                     }
                 }
             }
@@ -199,9 +199,9 @@ const addNewRole = () => {
 // adding a new employee 
 const addNewEmployee = () => {
     console.log(`
-    ----------------------------------------
-            Type in the name your new employee
-    ----------------------------------------`);
+    ------------------------------------------
+        Type in the name your new employee
+    ------------------------------------------`);
 
     db.query('SELECT * FROM roles', (err, res) => {
         if (err) {
@@ -217,7 +217,7 @@ const addNewEmployee = () => {
                     if (first_nameInput) {
                         return true;
                     } else {
-                        console.log("No first name has been Type in the nameed, please try again.")
+                        console.log("No first name has been entered, please type in the new employee's first name.")
                     }
                 }
             },
@@ -229,19 +229,19 @@ const addNewEmployee = () => {
                     if (last_nameInput) {
                         return true;
                     } else {
-                        console.log("No last name has been Type in the nameed, please try again.")
+                        console.log("No last name has been entered, please type in the new employee's last name.")
                     }
                 }
             },
             {
                 type: 'input',
                 name: 'manager_id',
-                message: "What's the new employee's manager's employee id?",
+                message: "What's the new employee's manager's id?",
                 validate: manager_idInput => {
                     if (manager_idInput) {
                         return true;
                     } else {
-                        console.log("No manager id has been Type in the nameed, please try again.")
+                        console.log("No manager id has been entered, please type in the new employee's manager's id.")
                     }
                 }
             },
@@ -254,18 +254,18 @@ const addNewEmployee = () => {
                     if (role_idInput) {
                         return true;
                     } else {
-                        console.log("No role id has been Type in the nameed, please try again.")
+                        console.log("No role id has been entered, please type in the new employee's role.")
                     }
                 }
             }
         ]).then((employee) => {
-            const selectedRole = res.find(roles => roles.job_title === employee.role_name);
+            const newEmpSelectedRole = res.find(roles => roles.job_title === employee.role_name);
 
             db.query('INSERT INTO employees SET ?', {
                 first_name: employee.first_name,
                 last_name: employee.last_name,
                 manager_id: employee.manager_id,
-                role_id: selectedRole.id
+                role_id: newEmpSelectedRole.id
             });
 
             mainMenu();
@@ -292,7 +292,7 @@ const updateEmployeeRole = () => {
                     if (employee_idInput) {
                         return true;
                     } else {
-                        console.log('No employee has been selected, please try again.');
+                        console.log('No employee has been selected, please select an employee using your keyboard.');
                         return false;
                     }
                 }
@@ -316,16 +316,16 @@ const updateEmployeeRole = () => {
                             if (role_idInput) {
                                 return true;
                             } else {
-                                console.log('No role id has been Type in the nameed, please try again.');
+                                console.log('No role id has been entered, please type in the employees new role.');
                                 return false;
                             }
                         }
                     }
                 ]).then(selectedEmployee => {
-                    const selectedRole = res.find(roles => roles.job_title === selectedEmployee.role_id);
+                    const newEmpSelectedRole = res.find(roles => roles.job_title === selectedEmployee.role_id);
 
                     db.query("UPDATE employees SET ? WHERE last_name = " + "'" + employeeLastName + "'", {
-                        role_id: selectedRole.id
+                        role_id: newEmpSelectedRole.id
                     });
 
                     mainMenu();
