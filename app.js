@@ -61,7 +61,7 @@ const mainMenu = () => {
                 updateEmployeeRole();
                 break;
             case 'Close Application':
-                console.log('Closing Application')
+                console.log('Application is Closed')
                 break;
         }
     });
